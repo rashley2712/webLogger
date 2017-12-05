@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-import argparse, os, sys, re
-import configHelper
+import argparse, os, sys, re, time, shutil, math
+import configHelper, generalUtils
 
 defaultConfiguration = {
 	'delay': 10,
@@ -15,7 +15,9 @@ if __name__ == "__main__":
 	parser.add_argument('-m', '--mask', type=str, help="Regular expression for file match. Default will be ''.*.(fits|fits.gz|fits.fz|fit)'.")
 	parser.add_argument('--show', action='store_true', help='Showed stored configuration and exit.')
 	parser.add_argument('--clear', action='store_true', help='Clear stored configuration and exit.')
-	parser.add_argument('--set', type=str, nargs='*', help='Set a parameter')
+	parser.add_argument('--set', type=str, nargs='*', help='Set a parameter.')
+	parser.add_argument('--clean', action='store_true', help='Clean out all of the files in the destination folder.')
+
 	arg = parser.parse_args()
 
 	debug = True
@@ -71,6 +73,12 @@ if __name__ == "__main__":
 			if (m):
 				existingFilenames.append(file)
 
+	if arg.clean:
+		for f in existingFilenames:
+			print("removing", f)
+			os.remove(os.path.join(destinationFolder, f))
+		sys.exit()
+
 	def incrementalItems(firstList, secondList):
 		newList = []
 		for f in firstList:
@@ -85,5 +93,20 @@ if __name__ == "__main__":
 
 	FITSFilenames = incrementalItems(FITSFilenames, existingFilenames)
 	FITSFilenames = sorted(FITSFilenames)
-	for f in FITSFilenames:
-		print(f)
+	numFiles = len(FITSFilenames)
+	print("%d files to copy."%numFiles)
+	for index, f in enumerate(FITSFilenames):
+		sys.stdout.write("\rCopying from %s to %s\n"%(os.path.join(sourceFolder, f), os.path.join(destinationFolder, f)))
+		shutil.copy2(os.path.join(sourceFolder, f), os.path.join(destinationFolder, f))
+		filesToGo = numFiles - index
+		for i in range(int(config.delay)):
+			timeLeft = filesToGo * config.delay - i
+			timeLeftMinutes = math.floor(timeLeft/60)
+			timeLeftHours = math.floor(timeLeftMinutes/60)
+			timeLeftMinutes = timeLeftMinutes % 60
+			timeLeftSeconds = timeLeft % 60
+			if timeLeftHours>0: sys.stdout.write("\rWaiting for %ds  Total time left: %02d:%02d:%02d   "%(config.delay - i, timeLeftHours, timeLeftMinutes, timeLeftSeconds))
+			else: sys.stdout.write("\rWaiting for %ds Total time left: %02d:%02d   "%(config.delay - i, timeLeftMinutes, timeLeftSeconds))
+			time.sleep(1)
+		sys.stdout.write("\n")
+		sys.stdout.flush()
