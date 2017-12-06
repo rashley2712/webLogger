@@ -108,5 +108,4 @@ if __name__ == "__main__":
 			if timeLeftHours>0: sys.stdout.write("\rWaiting for %ds  Total time left: %02d:%02d:%02d   "%(config.delay - i, timeLeftHours, timeLeftMinutes, timeLeftSeconds))
 			else: sys.stdout.write("\rWaiting for %ds Total time left: %02d:%02d   "%(config.delay - i, timeLeftMinutes, timeLeftSeconds))
 			time.sleep(1)
-		sys.stdout.write("\n")
 		sys.stdout.flush()
