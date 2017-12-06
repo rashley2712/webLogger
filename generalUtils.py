@@ -15,6 +15,18 @@ def setMatplotlibDefaults():
 	matplotlib.rcParams.update(params)
 
 
+def incrementalItems(firstList, secondList):
+	newList = []
+	for f in firstList:
+		found = False
+		for s in secondList:
+			if s==f:
+				found = True
+				continue
+		if not found: newList.append(f)
+	return newList
+
+
 
 
 def query_yes_no(question, default="yes"):

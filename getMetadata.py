@@ -14,6 +14,8 @@ if __name__ == "__main__":
 	parser.add_argument('--show', action='store_true', help='Showed stored configuration and exit.')
 	parser.add_argument('--clear', action='store_true', help='Clear stored configuration and exit.')
 	parser.add_argument('--set', type=str, nargs='*', help='Set a parameter.')
+	parser.add_argument('--clean', action='store_true', help='Clean out the database and regenerate all of the metadata.')
+
 	arg = parser.parse_args()
 	debug = True
 
@@ -55,5 +57,22 @@ if __name__ == "__main__":
 				FITSFilenames.append(file)
 
 
-	for f in FITSFilenames:
-		print(f)
+	fitsDB = fitsObjects.fitsDatabase()
+	if arg.clean:
+		fitsDB.clean()
+		sys.exit()
+
+	fitsDB.load()
+	print(fitsDB.getFilenames())
+
+	newFiles = generalUtils.incrementalItems(FITSFilenames, fitsDB.getFilenames())
+
+	print("These are the new files:")
+	print(newFiles)
+
+	for f in newFiles:
+		print("adding ", f)
+		fitsDB.addObject(f)
+		fitsDB.addFITSData(f)
+
+	fitsDB.save()
