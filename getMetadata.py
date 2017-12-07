@@ -4,7 +4,8 @@ import configHelper, generalUtils, fitsObjects
 
 defaultConfiguration = {
 	'delay': 10,
-	"SearchString": ".*.(fits|fits.gz|fits.fz|fit)"
+	"SearchString": ".*.(fits|fits.gz|fits.fz|fit)",
+	"webPath": "/home/rashley/webLogger/www"
 	}
 
 
@@ -17,7 +18,7 @@ if __name__ == "__main__":
 	parser.add_argument('--clean', action='store_true', help='Clean out the database and regenerate all of the metadata.')
 
 	arg = parser.parse_args()
-	debug = True
+	debug = False
 
 	config = configHelper.config(debug = False)
 	if not config._loaded:
@@ -57,18 +58,20 @@ if __name__ == "__main__":
 				FITSFilenames.append(file)
 
 
-	fitsDB = fitsObjects.fitsDatabase()
+	fitsDB = fitsObjects.fitsDatabase(os.path.join(config.webPath, "db.json"))
 	if arg.clean:
 		fitsDB.clean()
 		sys.exit()
 
 	fitsDB.load()
-	print(fitsDB.getFilenames())
 
 	newFiles = generalUtils.incrementalItems(FITSFilenames, fitsDB.getFilenames())
 
-	print("These are the new files:")
-	print(newFiles)
+	if len(newFiles)==0:
+		print("There are no new files.")
+		sys.exit()
+	if len(newFiles)==1: print("There is 1 new file:")
+	else: print("There are %d new files:"%len(newFiles))
 
 	for f in newFiles:
 		print("adding ", f)

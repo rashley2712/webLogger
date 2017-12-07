@@ -1,10 +1,13 @@
-import json, os, astropy
+import json, os, sys
+import astropy
+from astropy.io import fits
 
 class fitsDatabase:
-	def __init__(self):
-		self.dbFilename = "db.json"
+	def __init__(self, filename=None):
+		if filename is None: self.dbFilename = "db.json"
+		else: self.dbFilename = filename
 		self.objectList = []
-		self.debug = True
+		self.debug = False
 
 	def addObject(self, filename):
 		newObject = { "filename" : filename }
@@ -27,7 +30,30 @@ class fitsDatabase:
 		targetObject = None
 		for index, o in enumerate(self.objectList):
 			if o['filename'] == filename: targetObject = o
-		targetObject['data'] = 'FITSfile'
+		if targetObject is None: return False
+
+		allHeaders = {}
+		try:
+			hdulist = fits.open(targetObject['filename'])
+			if self.debug: print("Info: ", hdulist.info())
+			# Grab all of the FITS headers I can find
+			for card in hdulist:
+				for key in card.header.keys():
+					allHeaders[key] = card.header[key]
+
+			hdulist.close(output_verify='ignore')
+		except astropy.io.fits.verify.VerifyError as e:
+			print("WARNING: Verification error", e)
+
+		except Exception as e:
+			print("Unexpected error:", sys.exc_info()[0])
+			print(e)
+			print("Could not find any valid FITS data for %s"%filename)
+			return False
+
+
+		for key in allHeaders.keys():
+			targetObject[key] = allHeaders[key]
 
 
 	def clean(self):
