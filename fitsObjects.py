@@ -50,6 +50,7 @@ class fitsDatabase:
 			print(e)
 			print("Could not find any valid FITS data for %s"%filename)
 			return False
+		
 
 
 		for key in allHeaders.keys():
