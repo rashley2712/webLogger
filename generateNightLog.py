@@ -66,7 +66,7 @@ if __name__ == "__main__":
 	outputPath = os.path.join(config.webPath, telPath, logDate)
 	print("Writing webLogger files to: %s"%outputPath)
 
-	metadataCommand = ["getMetadata"]
+	metadataCommand = ["getMetadata.py"]
 	metadataCommand.append('-f')
 	metadataCommand.append(dataPath)
 	metadataCommand.append('-o')
