@@ -3,20 +3,29 @@ import astropy
 from astropy.io import fits
 
 class fitsDatabase:
-	def __init__(self, filename=None):
+	def __init__(self, filename=None, debug=False):
 		if filename is None: self.dbFilename = "db.json"
 		else: self.dbFilename = filename
+		self.dataPath = '.'
 		self.objectList = []
-		self.debug = False
+		self.debug = debug
 
 	def addObject(self, filename):
 		newObject = { "filename" : filename }
 		self.objectList.append(newObject)
 
 	def save(self):
+		if self.debug: print("Writing dbfile to %s"%self.dbFilename)
+		directory = os.path.dirname(self.dbFilename)
+		if not os.path.exists(directory):
+			os.makedirs(directory)
 		outputfile = open(self.dbFilename, 'wt')
 		json.dump(self.objectList, outputfile, indent = 4)
 		outputfile.close()
+
+	def showDataTypes(self):
+		for o in self.objectList:
+			print(o)
 
 	def load(self):
 		try:
@@ -34,12 +43,14 @@ class fitsDatabase:
 
 		allHeaders = {}
 		try:
-			hdulist = fits.open(targetObject['filename'])
+			hdulist = fits.open(os.path.join(self.dataPath, targetObject['filename']))
 			if self.debug: print("Info: ", hdulist.info())
 			# Grab all of the FITS headers I can find
 			for card in hdulist:
 				for key in card.header.keys():
 					allHeaders[key] = card.header[key]
+					if type(card.header[key]) is astropy.io.fits.header._HeaderCommentaryCards:
+						allHeaders[key] = str(card.header[key])
 
 			hdulist.close(output_verify='ignore')
 		except astropy.io.fits.verify.VerifyError as e:
@@ -50,7 +61,7 @@ class fitsDatabase:
 			print(e)
 			print("Could not find any valid FITS data for %s"%filename)
 			return False
-		
+
 
 
 		for key in allHeaders.keys():

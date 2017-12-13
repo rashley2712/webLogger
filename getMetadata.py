@@ -5,17 +5,19 @@ import configHelper, generalUtils, fitsObjects
 defaultConfiguration = {
 	'delay': 10,
 	"SearchString": ".*.(fits|fits.gz|fits.fz|fit)",
-	"webPath": "/home/rashley/webLogger/www"
+	"webPath": "/home/rashley/webLogger/www",
 	}
 
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description='Reads the files in the folder and generates metadata from the FITS headers.')
-	parser.add_argument('--folder', type=str, default='.', help='Directory containing the files. Deafult is current directory.')
+	parser.add_argument('-f', '--folder', type=str, default='.', help='Directory containing the files. Default is the current directory.')
+	parser.add_argument('-o', '--output', type=str, default='.', help='Directory for the output files. Defaults to ''.''')
 	parser.add_argument('--show', action='store_true', help='Showed stored configuration and exit.')
 	parser.add_argument('--clear', action='store_true', help='Clear stored configuration and exit.')
 	parser.add_argument('--set', type=str, nargs='*', help='Set a parameter.')
 	parser.add_argument('--clean', action='store_true', help='Clean out the database and regenerate all of the metadata.')
+
 
 	arg = parser.parse_args()
 	debug = False
@@ -58,7 +60,8 @@ if __name__ == "__main__":
 				FITSFilenames.append(file)
 
 
-	fitsDB = fitsObjects.fitsDatabase(os.path.join(config.webPath, "db.json"))
+	fitsDB = fitsObjects.fitsDatabase(os.path.join(arg.output, "db.json"), debug=True)
+	fitsDB.dataPath = sourceFolder
 	if arg.clean:
 		fitsDB.clean()
 		sys.exit()
