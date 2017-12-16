@@ -60,7 +60,7 @@ if __name__ == "__main__":
 				FITSFilenames.append(file)
 
 
-	fitsDB = fitsObjects.fitsDatabase(os.path.join(arg.output, "db.json"), debug=True)
+	fitsDB = fitsObjects.fitsDatabase(os.path.join(arg.output, "db.json"), debug=False)
 	fitsDB.dataPath = sourceFolder
 	if arg.clean:
 		fitsDB.clean()

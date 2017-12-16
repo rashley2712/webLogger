@@ -19,6 +19,7 @@ if __name__ == "__main__":
 	parser.add_argument('--clean', action='store_true', help='Clean out the database and regenerate all of the metadata.')
 	arg = parser.parse_args()
 	debug = False
+	installPath = os.path.dirname(os.path.realpath(__file__))
 
 	config = configHelper.config(debug = False)
 	if not config._loaded:
@@ -66,10 +67,14 @@ if __name__ == "__main__":
 	outputPath = os.path.join(config.webPath, telPath, logDate)
 	print("Writing webLogger files to: %s"%outputPath)
 
-	metadataCommand = ["getMetadata.py"]
+	metadataCommand = [installPath + "/getMetadata.py"]
 	metadataCommand.append('-f')
 	metadataCommand.append(dataPath)
 	metadataCommand.append('-o')
 	metadataCommand.append(outputPath)
+	if arg.clean:
+		print("Performing clean")
+		metadataCommand.append('--clean')
+
 
 	subprocess.call(metadataCommand)

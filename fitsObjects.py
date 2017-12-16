@@ -12,6 +12,7 @@ class fitsDatabase:
 
 	def addObject(self, filename):
 		newObject = { "filename" : filename }
+		newObject['unixtime'] = os.path.getmtime(os.path.join(self.dataPath, filename))
 		self.objectList.append(newObject)
 
 	def save(self):
@@ -71,6 +72,7 @@ class fitsDatabase:
 	def clean(self):
 		try:
 			os.remove(self.dbFilename)
+			print("Removed %s"%self.dbFilename)
 		except FileNotFoundError:
 			if self.debug: print("No file to clean.")
 
