@@ -57,7 +57,7 @@ var server = http.createServer(function (request, response) {
 
 			fs.readFile(fullFilename, function(error, content) {
 			response.writeHead(200, { 'Content-Type': contentType })
-			if (content!=null) console.log(content.toString())
+			//if (content!=null) console.log(content.toString())
 		  response.end(content, 'utf-8')
 		})
 
