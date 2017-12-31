@@ -6,6 +6,10 @@ defaultConfiguration = {
 	"webPath": "/home/rashley/webLogger/www",
 	}
 
+def changeExtension(filename, newExtension):
+	return os.path.splitext(filename)[0] + "." + newExtension
+
+
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description='Loads FITS information from a JSON db file and looks for image data to generate thumbnails.')
@@ -13,6 +17,7 @@ if __name__ == "__main__":
 	parser.add_argument('-o', '--output', type=str, default='.', help='Directory for the output files. Defaults to ''.''')
 	parser.add_argument('--show', action='store_true', help='Showed stored configuration and exit.')
 	parser.add_argument('--clear', action='store_true', help='Clear stored configuration and exit.')
+	parser.add_argument('--force', action='store_true', help='Force regeneration of the png and thumbnails.')
 	parser.add_argument('--set', type=str, nargs='*', help='Set a parameter.')
 	parser.add_argument('--clean', action='store_true', help='Clean out the database and regenerate all of the metadata.')
 	arg = parser.parse_args()
@@ -52,11 +57,20 @@ if __name__ == "__main__":
 
 	fitsDB.load()
 
-
-	filesToProcess = []
-	# for index in range(len(fitsDB.objectList)):
-	for index in range(1):
-		if not fitsDB.hasImageData(index):
-			filesToProcess.append(fitsDB.objectList[index]['originalFilename'])
+	modifiedCount = 0
+	for index in range(len(fitsDB.objectList)):
+		if not fitsDB.hasImageData(index) or arg.force:
 			fitsObject = fitsObjects.fitsObject(fitsDB.objectList[index])
 			fitsObject.lookForImageData()
+			fitsObject.getBoostedImage()
+			outputFilename = os.path.join(sourceFolder, changeExtension(fitsDB.objectList[index]['filename'], "png"))
+			thumbnailFilename = os.path.join(sourceFolder, "thumb_" + changeExtension(fitsDB.objectList[index]['filename'], "png"))
+			print("Will write the png image to %s"%outputFilename)
+			fitsObject.writeAsPNG(True, outputFilename)
+			fitsObject.createThumbnail(thumbnailFilename)
+			imageData = fitsObject.getImageMetadata()
+			print("Image metadata: " + str(imageData))
+			fitsDB.addImageMetadata(index, imageData)
+			modifiedCount+=1
+	print("Produced image data for %d files."%modifiedCount)
+	if modifiedCount>0: fitsDB.save()

@@ -17,6 +17,8 @@ if __name__ == "__main__":
 	parser.add_argument('--clear', action='store_true', help='Clear stored configuration and exit.')
 	parser.add_argument('--set', type=str, nargs='*', help='Set a parameter.')
 	parser.add_argument('--clean', action='store_true', help='Clean out the database and regenerate all of the metadata.')
+	parser.add_argument('--force', action='store_true', help='Force regeneration of the png and thumbnails.')
+
 	arg = parser.parse_args()
 	debug = False
 	installPath = os.path.dirname(os.path.realpath(__file__))
@@ -76,5 +78,16 @@ if __name__ == "__main__":
 		print("Performing clean")
 		metadataCommand.append('--clean')
 
-
+	print("Executing: " + str(metadataCommand))
 	subprocess.call(metadataCommand)
+	if arg.clean: sys.exit()
+
+	imageCommand = [installPath + "/getImageData.py"]
+	imageCommand.append('-f')
+	imageCommand.append(outputPath)
+	if arg.force:
+		print("Forcing image regeneration")
+		imageCommand.append('--force')
+
+
+	subprocess.call(imageCommand)
