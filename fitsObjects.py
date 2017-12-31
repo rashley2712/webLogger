@@ -102,7 +102,7 @@ class fitsObject:
 		self.imageSrc = os.path.basename(outputFilename)
 		img.save(outputFilename, "PNG", clobber=True)
 
-	def createThumbnail(self, filename = None, size=128):
+	def createThumbnail(self, filename = None, size=256):
 		if not self.boostedImageExists: imageData = self.getBoostedImage()
 		else: imageData = self.boostedImage
 
