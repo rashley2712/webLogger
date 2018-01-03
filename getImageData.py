@@ -73,4 +73,6 @@ if __name__ == "__main__":
 			fitsDB.addImageMetadata(index, imageData)
 			modifiedCount+=1
 	print("Produced image data for %d files."%modifiedCount)
-	if modifiedCount>0: fitsDB.save()
+	if modifiedCount>0:
+		fitsDB.save()
+		fitsDB.compress()

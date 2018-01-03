@@ -1,4 +1,4 @@
-import json, os, sys, numpy
+import json, os, sys, numpy, subprocess
 import astropy
 from astropy.io import fits
 from PIL import Image,ImageDraw,ImageFont
@@ -225,11 +225,18 @@ class fitsDatabase:
 		json.dump(self.objectList, outputfile, indent = 4)
 		outputfile.close()
 
+
+
 	def hasImageData(self, index):
 		fitsObject = self.objectList[index]
 		if 'imageData' not in fitsObject.keys(): return False
 		return True
 
+	def compress(self):
+		gzipCommand = ["gzip"]
+		gzipCommand.append("-k")
+		gzipCommand.append(self.dbFilename)
+		subprocess.call(gzipCommand)
 
 	def showDataTypes(self):
 		for o in self.objectList:

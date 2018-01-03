@@ -34,6 +34,7 @@ var server = http.createServer(function (request, response) {
 		var fullFilename = rootPath + filename
 		var contentType = 'text/html'
 		var extname = path.extname(filename);
+		var contentEncoding = 'utf8';
 		switch (extname) {
 			case '.js':
 					contentType = 'text/javascript';
@@ -53,12 +54,17 @@ var server = http.createServer(function (request, response) {
 			case '.jpg':
 					contentType = 'image/jpg';
 					break;
-				}
+			case '.gz':
+					contentType = 'application/json';
+					contentEncoding = 'gzip';
+ 					console.log("Serving a zip file.")
+					break;
+			}
 
 			fs.readFile(fullFilename, function(error, content) {
-			response.writeHead(200, { 'Content-Type': contentType })
+			response.writeHead(200, { 'Content-Type': contentType, 'Content-Encoding': contentEncoding });
 			//if (content!=null) console.log(content.toString())
-		  response.end(content, 'utf-8')
+		  response.end(content, 'utf-8');
 		})
 
 	}

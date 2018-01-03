@@ -82,3 +82,4 @@ if __name__ == "__main__":
 		fitsDB.addFITSData(f)
 
 	fitsDB.save()
+	fitsDB.compress()

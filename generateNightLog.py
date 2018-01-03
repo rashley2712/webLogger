@@ -18,6 +18,7 @@ if __name__ == "__main__":
 	parser.add_argument('--set', type=str, nargs='*', help='Set a parameter.')
 	parser.add_argument('--clean', action='store_true', help='Clean out the database and regenerate all of the metadata.')
 	parser.add_argument('--force', action='store_true', help='Force regeneration of the png and thumbnails.')
+	parser.add_argument('--noimages', action='store_true', help='Don''t process the image data')
 
 	arg = parser.parse_args()
 	debug = False
@@ -81,6 +82,8 @@ if __name__ == "__main__":
 	print("Executing: " + str(metadataCommand))
 	subprocess.call(metadataCommand)
 	if arg.clean: sys.exit()
+
+	if arg.noimages: sys.exit()
 
 	imageCommand = [installPath + "/getImageData.py"]
 	imageCommand.append('-f')
