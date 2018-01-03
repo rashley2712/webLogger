@@ -54,6 +54,9 @@ var server = http.createServer(function (request, response) {
 			case '.jpg':
 					contentType = 'image/jpg';
 					break;
+			case '.ttf':
+					contentType = 'application/x-font-ttf';
+					break;
 			case '.gz':
 					contentType = 'application/json';
 					contentEncoding = 'gzip';

@@ -235,6 +235,7 @@ class fitsDatabase:
 	def compress(self):
 		gzipCommand = ["gzip"]
 		gzipCommand.append("-k")
+		gzipCommand.append("-f")
 		gzipCommand.append(self.dbFilename)
 		subprocess.call(gzipCommand)
 
