@@ -61,17 +61,19 @@ if __name__ == "__main__":
 	for index in range(len(fitsDB.objectList)):
 		if not fitsDB.hasImageData(index) or arg.force:
 			fitsObject = fitsObjects.fitsObject(fitsDB.objectList[index])
-			fitsObject.lookForImageData()
-			fitsObject.getBoostedImage()
-			outputFilename = os.path.join(sourceFolder, changeExtension(fitsDB.objectList[index]['filename'], "png"))
-			thumbnailFilename = os.path.join(sourceFolder, "thumb_" + changeExtension(fitsDB.objectList[index]['filename'], "png"))
-			print("Will write the png image to %s"%outputFilename)
-			fitsObject.writeAsPNG(True, outputFilename)
-			fitsObject.createThumbnail(thumbnailFilename)
-			imageData = fitsObject.getImageMetadata()
-			print("Image metadata: " + str(imageData))
-			fitsDB.addImageMetadata(index, imageData)
-			modifiedCount+=1
+			if fitsObject.lookForImageData():
+				fitsObject.getBoostedImage()
+				outputFilename = os.path.join(sourceFolder, changeExtension(fitsDB.objectList[index]['filename'], "png"))
+				thumbnailFilename = os.path.join(sourceFolder, "thumb_" + changeExtension(fitsDB.objectList[index]['filename'], "png"))
+				print("Will write the png image to %s"%outputFilename)
+				fitsObject.writeAsPNG(True, outputFilename)
+				fitsObject.createThumbnail(thumbnailFilename)
+				imageData = fitsObject.getImageMetadata()
+				print("Image metadata: " + str(imageData))
+				fitsDB.addImageMetadata(index, imageData)
+				modifiedCount+=1
+			else:
+				print("No image data here...")
 	print("Produced image data for %d files."%modifiedCount)
 	if modifiedCount>0:
 		fitsDB.save()

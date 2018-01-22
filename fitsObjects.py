@@ -39,10 +39,10 @@ class fitsObject:
 					imageObject = {}
 					imageObject['data'] = h.data
 					imageObject['size'] = numpy.shape(h.data)
-					self.images.append(imageObject)
 					if len(imageObject['size'])<2:
 						if self.debug: print("Data is one-dimensional. Not valid.")
 						continue;
+					self.images.append(imageObject)
 					if self.debug: print("%d: Found image data of dimensions (%d, %d)"%(index, imageObject['size'][0], imageObject['size'][1]))
 				else:
 					if self.debug: print("%d: This card has no image data"%index)
@@ -52,6 +52,7 @@ class fitsObject:
 			print("%s does not appear to be a valid FITS file."%filename)
 		if len(self.images)==0:
 			if self.debug: print("Could not find any valid FITS data for %s"%filename)
+			self.hasImage = False
 			return False
 		if len(self.images)>1:
 			self.combineImages(images)
