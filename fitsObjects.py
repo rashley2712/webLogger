@@ -1,5 +1,6 @@
 import json, os, sys, numpy, subprocess
 import astropy
+import scipy
 from astropy.io import fits
 from PIL import Image,ImageDraw,ImageFont
 
@@ -55,7 +56,7 @@ class fitsObject:
 			self.hasImage = False
 			return False
 		if len(self.images)>1:
-			self.combineImages(images)
+			self.combineImages(self.images)
 		else:
 			self.fullImage = self.images[0]
 			self.size = numpy.shape(self.fullImage['data'])
@@ -144,12 +145,15 @@ class fitsObject:
 			pass
 
 		# Reduce the images sizes by 1/4
-		for num, i in enumerate(images):
-			percent = 25
-			if self.debug: print("Shrinking image %d by %d percent."%(num, percent))
-			i['data'] = scipy.misc.imresize(self.boostImageData(i['data']), percent)
-			i['size'] = numpy.shape(i['data'])
-			if self.debug: print("New size:", i['size'])
+		#for num, i in enumerate(images):
+		#	percent = 25
+		#	if self.debug: print("Shrinking image %d by %d percent."%(num, percent))
+		#	i['data'] = scipy.misc.imresize(self.boostImageData(i['data']), percent)
+		#	i['size'] = numpy.shape(i['data'])
+		#	if self.debug: print("New size:", i['size'])
+
+		# Initialise the image object with the first image in the sequence
+		self.fullImage = images[0]
 
 		if WFC:
 			# Custom code to stitch the WFC images together
@@ -179,7 +183,7 @@ class fitsObject:
 				totalWidth+= i['size'][1]
 				totalHeight+=i['size'][0]
 			if self.debug: print("potential width, height", totalWidth, totalHeight)
-			if totalWidth<totalHeight:
+			if totalWidth<=totalHeight:
 				if self.debug: print("Stacking horizontally")
 				maxHeight = 0
 				for i in images:
@@ -195,7 +199,8 @@ class fitsObject:
 					segHend = segHstart + segHeight
 					fullImage[segHstart:segHend, segWstart: segWend] = i['data']
 					segWstart+= segWidth
-
+			else:
+				if self.debug: print("Stacking vertically... stub code (incomplete!)")
 
 		self.fullImage['data'] = fullImage
 		self.fullImage['size'] = numpy.shape(fullImage)
