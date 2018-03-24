@@ -108,7 +108,7 @@ class fitsObject:
 		self.imageSrc = os.path.basename(outputFilename)
 		img.save(outputFilename, "PNG", clobber=True)
 
-	def createThumbnail(self, filename = None, size=256):
+	def createThumbnail(self, filename = None, scale=3.0):
 		if not self.boostedImageExists: imageData = self.getBoostedImage()
 		else: imageData = self.boostedImage
 
@@ -122,7 +122,16 @@ class fitsObject:
 			palette.extend((i, i, i)) # grey scale
 			img.putpalette(palette)
 		img.putdata(testData)
-		thumbnailSize = (size, size)
+
+		if imgSize[0]>imgSize[1]:
+			scale = 300. / imgSize[0]
+		else:
+			scale = 300. / imgSize[1]
+
+		newSize = (imgSize[0]*scale, imgSize[1]*scale)
+
+		#thumbnailSize = (size, size)
+		thumbnailSize = newSize
 		img.thumbnail(thumbnailSize, Image.ANTIALIAS)
 		if filename==None:
 			outputFilename = "thumb_" + changeExtension(self.filename, "png")
