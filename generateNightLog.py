@@ -10,7 +10,7 @@ defaultConfiguration = {
 
 
 if __name__ == "__main__":
-	parser = argparse.ArgumentParser(description='Reads the files in an ING obsdata folder an triggers the other programs to create the webLogger files..')
+	parser = argparse.ArgumentParser(description='Reads the files in an ING obsdata folder an triggers the other programs to create the webLogger files.')
 	parser.add_argument('-d', '--date', type=str, default='today', help='The date to the run. Format is YYYYMMDD. Leave blank to perform for ''today'' (starting at the most recent midday).')
 	parser.add_argument('telescope', type=str, help='Telescope. Options are WHT or INT.')
 	parser.add_argument('--show', action='store_true', help='Showed stored configuration and exit.')
@@ -18,7 +18,8 @@ if __name__ == "__main__":
 	parser.add_argument('--set', type=str, nargs='*', help='Set a parameter.')
 	parser.add_argument('--clean', action='store_true', help='Clean out the database and regenerate all of the metadata.')
 	parser.add_argument('--force', action='store_true', help='Force regeneration of the png and thumbnails.')
-	parser.add_argument('--noimages', action='store_true', help='Don''t process the image data')
+	parser.add_argument('--noimages', action='store_true', help='Don''t process the image data.')
+	parser.add_argument('--copy', action='store_true', help='Copy original FITS files to the web archive.')
 
 	arg = parser.parse_args()
 	debug = False
@@ -94,3 +95,11 @@ if __name__ == "__main__":
 
 
 	subprocess.call(imageCommand)
+
+	if arg.copy:
+		fitsCopyCommand = [installPath + "/copyOriginals.py"]
+		fitsCopyCommand.append('-o')
+		fitsCopyCommand.append(outputPath)
+		fitsCopyCommand.append('-f')
+		fitsCopyCommand.append(outputPath)
+		subprocess.call(fitsCopyCommand)
