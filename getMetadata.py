@@ -59,6 +59,7 @@ if __name__ == "__main__":
 			if (m):
 				FITSFilenames.append(file)
 
+	FITSFilenames = sorted(FITSFilenames)
 
 	fitsDB = fitsObjects.fitsDatabase(os.path.join(arg.output, "db.json"), debug=False)
 	fitsDB.dataPath = sourceFolder
@@ -76,10 +77,11 @@ if __name__ == "__main__":
 	if len(newFiles)==1: print("There is 1 new file:")
 	else: print("There are %d new files:"%len(newFiles))
 
-	for f in newFiles:
+	for index, f in enumerate(newFiles):
 		print("adding ", f)
 		fitsDB.addObject(f)
 		fitsDB.addFITSData(f)
+		if index>=0: break
 
 	fitsDB.save()
 	fitsDB.compress()
