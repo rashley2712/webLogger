@@ -81,7 +81,7 @@ if __name__ == "__main__":
 		print("adding ", f)
 		fitsDB.addObject(f)
 		fitsDB.addFITSData(f)
-		if index>=0: break
+		# if index>=0: break
 
 	fitsDB.save()
 	fitsDB.compress()
