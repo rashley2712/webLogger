@@ -1,6 +1,7 @@
 import json, os, sys, numpy, subprocess
 import astropy
 import scipy
+import collections
 from astropy.io import fits
 from PIL import Image,ImageDraw,ImageFont
 
@@ -276,7 +277,7 @@ class fitsDatabase:
 			if o['filename'] == filename: targetObject = o
 		if targetObject is None: return False
 
-		allHeaders = {}
+		allHeaders = collections.OrderedDict()
 		try:
 			hdulist = fits.open(os.path.join(self.dataPath, targetObject['filename']))
 			if self.debug: print("Info: ", hdulist.info())
