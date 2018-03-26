@@ -231,7 +231,8 @@ class fitsDatabase:
 		self.objectList[index]['imageData'] = data
 
 	def addObject(self, filename):
-		newObject = { "filename" : filename }
+		newObject = collections.OrderedDict()
+		newObject["filename"] = filename
 		newObject['unixtime'] = os.path.getmtime(os.path.join(self.dataPath, filename))
 		newObject['originalFilename'] = os.path.join(self.dataPath, filename)
 		self.objectList.append(newObject)
