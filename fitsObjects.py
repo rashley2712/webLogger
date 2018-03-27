@@ -267,7 +267,7 @@ class fitsDatabase:
 	def load(self):
 		try:
 			inputfile = open(self.dbFilename, 'rt')
-			self.objectList = json.load(inputfile)
+			self.objectList = json.load(inputfile,  object_pairs_hook=collections.OrderedDict)
 			inputfile.close()
 		except FileNotFoundError:
 			if self.debug: print("Could not load the database file %s."%self.dbFilename)
