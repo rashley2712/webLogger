@@ -286,7 +286,6 @@ class fitsDatabase:
 			for card in hdulist:
 				for key in card.header.keys():
 					allHeaders[key] = card.header[key]
-					print(key)
 					if type(card.header[key]) is astropy.io.fits.header._HeaderCommentaryCards:
 						allHeaders[key] = str(card.header[key])
 
@@ -302,7 +301,6 @@ class fitsDatabase:
 
 		for key in allHeaders.keys():
 			targetObject[key] = allHeaders[key]
-			print("adding key :" + key)
 
 
 	def clean(self):

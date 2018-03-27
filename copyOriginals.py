@@ -76,9 +76,7 @@ if __name__ == "__main__":
 			copyStatus = f['originalavailable']
 		except:
 			copyStatus = False;
-		if copyStatus:
-			print("Already copied")
-		else:
+		if not copyStatus:
 			source = f['originalFilename']
 			destination = os.path.join(destinationFolder, f['filename'])
 			print(source + " --> writing to: " + destination)

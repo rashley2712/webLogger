@@ -71,7 +71,6 @@ if __name__ == "__main__":
 				fitsObject.createThumbnail(thumbnailFilename)
 				imageData = fitsObject.getImageMetadata()
 				print("Image metadata: " + str(imageData))
-				print(fitsDBEntry)
 				fitsDB.addImageMetadata(index, imageData)
 				modifiedCount+=1
 			else:
