@@ -232,7 +232,7 @@ class fitsDatabase:
 
 	def addObject(self, filename):
 		newObject = collections.OrderedDict()
-		newObject["filename"] = filename
+		newObject['filename'] = filename
 		newObject['unixtime'] = os.path.getmtime(os.path.join(self.dataPath, filename))
 		newObject['originalFilename'] = os.path.join(self.dataPath, filename)
 		self.objectList.append(newObject)
