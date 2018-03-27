@@ -59,8 +59,9 @@ if __name__ == "__main__":
 
 	modifiedCount = 0
 	for index in range(len(fitsDB.objectList)):
+		fitsDBEntry = fitsDB.objectList[index]
 		if not fitsDB.hasImageData(index) or arg.force:
-			fitsObject = fitsObjects.fitsObject(collections.OrderedDict(fitsDB.objectList[index]))
+			fitsObject = fitsObjects.fitsObject(fitsDBEntry)
 			if fitsObject.lookForImageData():
 				fitsObject.getBoostedImage()
 				outputFilename = os.path.join(sourceFolder, changeExtension(fitsDB.objectList[index]['filename'], "png"))
@@ -70,6 +71,7 @@ if __name__ == "__main__":
 				fitsObject.createThumbnail(thumbnailFilename)
 				imageData = fitsObject.getImageMetadata()
 				print("Image metadata: " + str(imageData))
+				print(fitsDBEntry)
 				fitsDB.addImageMetadata(index, imageData)
 				modifiedCount+=1
 			else:
