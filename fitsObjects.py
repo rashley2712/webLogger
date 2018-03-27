@@ -17,7 +17,7 @@ class fitsObject:
 		self.hasImage = False
 
 	def getImageMetadata(self):
-		imageMetadataObject = {}
+		imageMetadataObject = collections.OrderedDict()
 		imageMetadataObject['hasImage'] = self.hasImage
 		if not self.hasImage: return imageMetadataObject
 		imageMetadataObject['src'] = self.imageSrc
