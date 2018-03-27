@@ -82,6 +82,7 @@ if __name__ == "__main__":
 		fitsDB.addObject(f)
 		fitsDB.addFITSData(f)
 		input('Press enter to continue: ')
+		fitsDB.save()
 		# if index>=0: break
 
 	fitsDB.save()

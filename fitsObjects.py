@@ -302,6 +302,7 @@ class fitsDatabase:
 
 		for key in allHeaders.keys():
 			targetObject[key] = allHeaders[key]
+			print("adding key :" + key)
 
 
 	def clean(self):
