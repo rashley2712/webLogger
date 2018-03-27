@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import argparse, os, sys, re, time, shutil, math
-import configHelper, generalUtils, fitsObjects
+import configHelper, generalUtils, fitsObjects, collections
 
 defaultConfiguration = {
 	"webPath": "/home/rashley/webLogger/www",
@@ -60,7 +60,7 @@ if __name__ == "__main__":
 	modifiedCount = 0
 	for index in range(len(fitsDB.objectList)):
 		if not fitsDB.hasImageData(index) or arg.force:
-			fitsObject = fitsObjects.fitsObject(fitsDB.objectList[index])
+			fitsObject = fitsObjects.fitsObject(collections.OrderedDict(fitsDB.objectList[index]))
 			if fitsObject.lookForImageData():
 				fitsObject.getBoostedImage()
 				outputFilename = os.path.join(sourceFolder, changeExtension(fitsDB.objectList[index]['filename'], "png"))
