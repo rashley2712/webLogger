@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-import argparse, os, sys, re, time, shutil, math, datetime, subprocess
-import configHelper, generalUtils, fitsObjects
-
-
-
+import argparse
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Produces fake ParameterNoticeBoard output.')
     parser.add_argument('-i', type=str, help='parameter to report' )
