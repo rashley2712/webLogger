@@ -4933,7 +4933,7 @@ AF2.FIBREMODULE.FIBRE116.ITER -> long 0
 TCS.guideY -> string 0.00
 TCS.guideX -> string 0.00
 AGCA.WHA.WHAMechanismError -> long 0
-WEATHER.WHT.RAININTENSITY -> double 0.00000000000
+WEATHER.WHT.RAININTENSITY -> double 1.00000000000
 UDASCAMERA.TVCASS.RO_SECTION -> string {[1:1072,1:977]}
 PFIP.AFS.Position-> IN_ERROR -1 Status item not initialised
 UDASCAMERA.AUX2.CAMERA_NAME-> IN_ERROR -1 Status item not initialised
